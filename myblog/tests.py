@@ -20,7 +20,7 @@ class PostTestCase(TestCase):
     def test_author_names(self):
         names = [("Bob", "Marley", "Bob Marley"),
                  ("Name", "Two", "Name Two"),
-                 ("Sting", "", "Sting")]
+                 ("Sting", "", "Sting ")]
 
         author = User()
         p1 = Post(author=author)
@@ -41,7 +41,7 @@ class PostTestCase(TestCase):
 class CategoryTestCase(TestCase):
 
     def test_unicode(self):
-        expected =  'A String'
+        expected = 'A String'
         c1 = Category(name=expected)
         actual = str(c1.name)
         self.assertEqual(expected, actual)
@@ -55,6 +55,12 @@ class FrontEndTestCase(TestCase):
         self.now = datetime.datetime.utcnow().replace(tzinfo=utc)
         self.timedelta = datetime.timedelta(15)
         author = User.objects.get(pk=1)
+        category = Category()
+        category.name = "Test Category"
+        category.save()
+        category.post = []
+        category.save()
+
         for count in range(1, 11):
             post = Post(title="Post %d Title" % count,
                         text="foo",
@@ -64,6 +70,9 @@ class FrontEndTestCase(TestCase):
                 pubdate = self.now - self.timedelta * count
                 post.published_date = pubdate
             post.save()
+            if count % 2:
+                category.posts.add(post)
+                category.save()
 
     def test_list_only_published(self):
         resp = self.client.get('/')
@@ -85,3 +94,11 @@ class FrontEndTestCase(TestCase):
                 self.assertContains(resp, title)
             else:
                 self.assertEqual(resp.status_code, 404)
+
+    def test_category(self):
+        resp = self.client.get('/categories/1/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp, "Category: Test Category")
+        self.assertEqual(resp, "Post 1 Title")
+        self.assertEqual(resp, "Post 3 Title")
+        self.assertEqual(resp, "Post 5 Title")
