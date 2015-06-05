@@ -26,8 +26,8 @@ class PostTestCase(TestCase):
 
 class CategoryTestCase(TestCase):
 
-    def test_unicode(self):
-        expected =  'A String'
+    def test_string(self):
+        expected = 'A String'
         c1 = Category(name=expected)
         actual = str(c1.name)
         self.assertEqual(expected, actual)
