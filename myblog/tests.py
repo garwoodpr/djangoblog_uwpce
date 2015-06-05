@@ -40,7 +40,11 @@ class PostTestCase(TestCase):
 
 class CategoryTestCase(TestCase):
 
+<<<<<<< HEAD
     def test_unicode(self):
+=======
+    def test_string(self):
+>>>>>>> 9dbe86e8adf3bd25afa6bffc104b04c9cdd80f2a
         expected = 'A String'
         c1 = Category(name=expected)
         actual = str(c1.name)
