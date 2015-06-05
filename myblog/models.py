@@ -16,6 +16,7 @@ class Post(models.Model):
     def author_name(self):
         return " ".join((self.author.first_name, self.author.last_name))
 
+
 class Category(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)

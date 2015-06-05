@@ -17,6 +17,20 @@ class PostTestCase(TestCase):
         actual = unicode(p1)
         self.assertEqual(expected, actual)
 
+    def test_author_names(self):
+        names = [("Bob", "Marley", "Bob Marley"),
+                 ("Name", "Two", "Name Two"),
+                 ("Sting", "", "Sting")]
+
+        author = User()
+        p1 = Post(author=author)
+
+        for first_name, last_name, expected in names:
+            author.first_name = first_name
+            author.last_name = last_name
+            actual = p1.author_name()
+            self.assertEqual(expected, actual)
+
     def test_author_name(self):
         expected = u"Mr. Administrator"
         p1 = Post(author=self.user)
